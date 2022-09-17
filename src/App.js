@@ -32,10 +32,9 @@ function App() {
 
       <Nav user={user} setuser={setUser} />
       <Routes>
-        <Route exact path="/home" element={<Pdffile user={user} setuser={setUser} />} />
-        <Route exact path="/profile" element={<Profile user={user} setuser={setUser} />} />
+        <Route exact path="/" element={<Pdffile user={user} setuser={setUser} />} />
+        <Route exact path="/search" element={<Search user={user} setuser={setUser} />} />
       </Routes>
-      <Search />
     </div>
   );
 }
