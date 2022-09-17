@@ -1,64 +1,96 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { Button } from '@mui/material';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db } from "../firebase-config"
+import { doc, setDoc } from "firebase/firestore"; 
 
-const Pdffile = () => {
+
+
+const Pdffile = ({ user, setuser }) => {
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const [pdfFile, setPdfFile]=useState(null);
-  const [pdfError, setPdfError]=useState('');
-
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfError, setPdfError] = useState('');
+  const [url, seturl] = useState("")
   const allowedFiles = ['application/pdf'];
-  const handleFile = (e) =>{
+  const handleFile = async (e) => {
     let selectedFile = e.target.files[0];
-    if(selectedFile){
-      if(selectedFile&&allowedFiles.includes(selectedFile.type)){
+
+    const storage = getStorage();
+    var storagePath = "uploads/" + selectedFile.name;
+    const storageRef = ref(storage, storagePath);
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("upload is " + progress + '% done');
+    }, (error) => {
+      console.log(error);
+    }, async () => {
+      getDownloadURL(uploadTask.snapshot.ref).then( async(downloadUrl) => {
+        console.log("File Available at" + downloadUrl);
+        seturl(downloadUrl);
+
+      })
+    })
+
+
+
+
+    if (selectedFile) {
+      if (selectedFile && allowedFiles.includes(selectedFile.type)) {
         let reader = new FileReader();
         reader.readAsDataURL(selectedFile);
-        reader.onloadend=(e)=>{
+        reader.onloadend = (e) => {
           setPdfError('');
           setPdfFile(e.target.result);
         }
       }
-      else{
+      else {
         setPdfError('Not a valid pdf: Please select only PDF');
         setPdfFile('');
       }
     }
-    else{
+    else {
       console.log('please select a PDF');
     }
   }
-
+  const handleUpload = async()=>{
+    const data = {
+      url:url 
+    }
+    await setDoc(doc(db, "users", `${user.email}`), data); 
+  }
   return (
-    <div style={{padding:'2vw'}}>
+    <div style={{ padding: '2vw' }}>
       <form>
         <br></br>
-        <div style={{display:'flex', justifyContent:'space-between',width:'50vw' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: '50vw' }}>
 
-        <Button variant="contained" component="label">
+          <Button variant="contained" component="label">
             Select File
             <input type="file" hidden onChange={handleFile} />
-		</Button>
-        <Button variant="contained" component="label">
+          </Button>
+          <Button variant="contained" component="label" onClick={handleUpload()}>
             Upload File
-		</Button>
+          </Button>
         </div>
-        {pdfError&&<span className='text-danger'>{pdfError}</span>}
+        {pdfError && <span className='text-danger'>{pdfError}</span>}
 
       </form>
-      <div style={{marginTop:'5vh', width:'50vw', height:'80vh'}} className="viewer">
-        {pdfFile&&(
+      <div style={{ marginTop: '5vh', width: '50vw', height: '80vh' }} className="viewer">
+        {pdfFile && (
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
-            <Viewer style={{border:'greeen solid 2px'}} fileUrl={pdfFile}
-            plugins={[defaultLayoutPluginInstance]}></Viewer>
+            <Viewer style={{ border: 'greeen solid 2px' }} fileUrl={pdfFile}
+              plugins={[defaultLayoutPluginInstance]}></Viewer>
           </Worker>
         )}
-        {!pdfFile&&<>No file is selected yet</>}
+        {!pdfFile && <>No file is selected yet</>}
 
       </div>
 

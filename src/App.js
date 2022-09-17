@@ -10,7 +10,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-
+import { logout, signInWithGoogle, auth } from "./firebase-config"
 import Nav from "./Components/Nav"
 import Search from "./Components/Search";
 import "./App.css";
@@ -19,15 +19,21 @@ import Profile from './Components/Profile/Profile'
 import Pdffile from "./Components/Pdffile";
 
 function App() {
-
+  const [user, setUser] = useState();
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => { 
+      setUser(user);
+    });
+  }, []);
 
   return (
+
     <div className="App">
 
-      <Nav />
+      <Nav user={user} setuser={setUser} />
       <Routes>
-        <Route exact path="/home" element={<Pdffile/>} />
-        <Route exact path="/profile" element={<Profile />} />
+        <Route exact path="/home" element={<Pdffile user={user} setuser={setUser} />} />
+        <Route exact path="/profile" element={<Profile user={user} setuser={setUser} />} />
       </Routes>
       <Search />
     </div>
