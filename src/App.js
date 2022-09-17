@@ -9,13 +9,23 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import Search from "./Components/Search";
 
+
+import Nav from "./Components/Nav"
+import Search from "./Components/Search";
+import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Profile from './Components/Profile/Profile'
 function App() {
 
 
   return (
     <div className="App">
+
+      <Nav />
+      <Routes>
+        <Route exact path="/profile" element={<Profile />} />
+      </Routes>
       <Search />
     </div>
   );
