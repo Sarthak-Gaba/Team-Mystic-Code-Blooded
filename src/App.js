@@ -17,11 +17,12 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Profile from './Components/Profile/Profile'
 import Pdffile from "./Components/Pdffile";
+import Imagerender from "./Components/Carousel";
 
 function App() {
   const [user, setUser] = useState();
   useEffect(() => {
-    auth.onAuthStateChanged((user) => { 
+    auth.onAuthStateChanged((user) => {
       setUser(user);
     });
   }, []);
@@ -36,6 +37,8 @@ function App() {
         <Route exact path="/profile" element={<Profile user={user} setuser={setUser} />} />
       </Routes>
       <Search />
+
+      {/* <Imagerender /> */}
     </div>
   );
 }

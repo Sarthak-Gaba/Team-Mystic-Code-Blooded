@@ -7,7 +7,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { Button } from '@mui/material';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db } from "../firebase-config"
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore";
 
 
 
@@ -18,26 +18,12 @@ const Pdffile = ({ user, setuser }) => {
   const [pdfError, setPdfError] = useState('');
   const [url, seturl] = useState("")
   const allowedFiles = ['application/pdf'];
+  const [File, setFile] = useState()
+
   const handleFile = async (e) => {
     let selectedFile = e.target.files[0];
+    setFile(selectedFile);
 
-    const storage = getStorage();
-    var storagePath = "uploads/" + selectedFile.name;
-    const storageRef = ref(storage, storagePath);
-    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-    uploadTask.on('state_changed', (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("upload is " + progress + '% done');
-    }, (error) => {
-      console.log(error);
-    }, async () => {
-      getDownloadURL(uploadTask.snapshot.ref).then( async(downloadUrl) => {
-        console.log("File Available at" + downloadUrl);
-        seturl(downloadUrl);
-
-      })
-    })
 
 
 
@@ -60,11 +46,50 @@ const Pdffile = ({ user, setuser }) => {
       console.log('please select a PDF');
     }
   }
-  const handleUpload = async()=>{
+  const handleUpload = async () => {
+
+
+    const selectedFile = File;
+    console.log(File);
+    const storage = getStorage();
+    var storagePath = "uploads/" + selectedFile.name;
+    const storageRef = ref(storage, storagePath);
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("upload is " + progress + '% done');
+    }, (error) => {
+      console.log(error);
+    }, async () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadUrl) => {
+        console.log("File Available at" + downloadUrl);
+        seturl(downloadUrl);
+
+      })
+    })
+
     const data = {
-      url:url 
+      url: url
     }
-    await setDoc(doc(db, "users", `${user.email}`), data); 
+    await setDoc(doc(db, "users", `${user.email}`), data);
+
+    const response = await fetch("https://d07e-2409-4055-7-2348-a9d3-875e-3784-dead.in.ngrok.io/", {
+      method: "POST",
+      headers: {
+        'Content-Type': "application/json",
+        'Access-Control-Allow-Credentials': 'true',
+        'credentials': 'include'
+      },
+      body: JSON.stringify(url),
+
+    });
+
+    const res = await response.json();
+    console.log(res);
+
+
+
   }
   return (
     <div style={{ padding: '2vw' }}>
@@ -76,7 +101,7 @@ const Pdffile = ({ user, setuser }) => {
             Select File
             <input type="file" hidden onChange={handleFile} />
           </Button>
-          <Button variant="contained" component="label" onClick={handleUpload()}>
+          <Button variant="contained" component="label" onClick={() => handleUpload()}>
             Upload File
           </Button>
         </div>
