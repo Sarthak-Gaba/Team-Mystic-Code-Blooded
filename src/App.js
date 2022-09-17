@@ -9,6 +9,10 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import "./App.css";
+import Nav from "./components/Nav";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   const [newName, setNewName] = useState("");
@@ -44,47 +48,12 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Welcome to Team Mystic!</h1>
-      <input
-        placeholder="Name..."
-        onChange={(event) => {
-          setNewName(event.target.value);
-        }}
-      />
-      <input
-        type="number"
-        placeholder="Age..."
-        onChange={(event) => {
-          setNewAge(event.target.value);
-        }}
-      />
-
-      <button onClick={createUser}> Create User</button>
-      {users.map((user) => {
-        return (
-          <div>
-            {" "}
-            <h1>Name: {user.name}</h1>
-            <h1>Age: {user.age}</h1>
-            <button
-              onClick={() => {
-                updateUser(user.id, user.age);
-              }}
-            >
-              {" "}
-              Increase Age
-            </button>
-            <button
-              onClick={() => {
-                deleteUser(user.id);
-              }}
-            >
-              {" "}
-              Delete User
-            </button>
-          </div>
-        );
-      })}
+      <Router>
+        <Nav />
+        <Routes>
+          <Route exact path="/profile" element={<Profile />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
