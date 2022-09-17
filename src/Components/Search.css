@@ -1,0 +1,12 @@
+.accordians__container{
+    overflow-y: scroll;
+}
+.accordians__container::-webkit-scrollbar{
+    display: none;
+}
+.image__container::-webkit-scrollbar{
+    display: none;
+}
+.image__container{
+    box-shadow: 1px 20px 60px rgba(16, 16, 16, 0.4);
+}
