@@ -38,7 +38,7 @@ const Nav = ({ user, setUser }) => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu variant="dark" className="dropdownMenu">
-              <Dropdown.Item className="weex" as={Link} to={"/profile"}>
+              <Dropdown.Item className="weex" as={Link} to={"/"}>
                 Profile
               </Dropdown.Item>
               <Dropdown.Item className="logoutDropdown">
