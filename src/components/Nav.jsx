@@ -4,7 +4,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { logout, signInWithGoogle, auth } from "../Firebase/Firebase";
+import { logout, signInWithGoogle, auth } from "../firebase-config";
 
 const Nav = () => {
   const [user, setUser] = useState();

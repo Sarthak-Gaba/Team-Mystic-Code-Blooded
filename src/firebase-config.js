@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "@firebase/firestore";
+
 import {
   getAuth,
   GoogleAuthProvider,
@@ -8,13 +10,12 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCzMq4Pjira4jArVr4MVenmiXpbk71BqZs",
-  authDomain: "chitchat-790ff.firebaseapp.com",
-  projectId: "chitchat-790ff",
-  storageBucket: "chitchat-790ff.appspot.com",
-  messagingSenderId: "504985005035",
-  appId: "1:504985005035:web:5fad36361b249ebd70c7ae",
-  measurementId: "G-RKF2PZEJRF",
+  apiKey: "AIzaSyAmt8t7jU4MXuKm06ufNrTvvDdPIjh3sVk",
+  authDomain: "team-mystic-7.firebaseapp.com",
+  projectId: "team-mystic-7",
+  storageBucket: "team-mystic-7.appspot.com",
+  messagingSenderId: "696854334899",
+  appId: "1:696854334899:web:3486508aa55cccf78a4fc6",
 };
 
 // Initialize Firebase
@@ -48,3 +49,5 @@ export const logout = (setUser) => {
       console.log(error);
     });
 };
+
+export const db = getFirestore(app);

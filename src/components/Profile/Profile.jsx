@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
-import { auth } from "../../Firebase/Firebase";
+import { auth } from "../../firebase-config";
 import "./Profile.css";
 
 const Profile = () => {
