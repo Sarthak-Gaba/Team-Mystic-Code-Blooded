@@ -6,13 +6,9 @@ import { Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { logout, signInWithGoogle, auth } from "../firebase-config";
 
-const Nav = () => {
-  const [user, setUser] = useState();
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
-  }, []);
+const Nav = ({ user, setUser }) => {
+  // const [user, setUser] = useState();
+  
   return (
     <>
       <Navbar bg="dark" variant="dark">
