@@ -16,6 +16,8 @@ import Search from "./Components/Search";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Profile from './Components/Profile/Profile'
+import Pdffile from "./Components/Pdffile";
+
 function App() {
 
 
@@ -24,6 +26,7 @@ function App() {
 
       <Nav />
       <Routes>
+        <Route exact path="/home" element={<Pdffile/>} />
         <Route exact path="/profile" element={<Profile />} />
       </Routes>
       <Search />
